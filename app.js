@@ -1,11 +1,17 @@
-require('dotenv').config();
-require('express-async-errors');
+require('dotenv').config()
+require('express-async-errors')
 
 //extra security packages
 const helmet = require('helmet')
 const cors = require('cors')
 const xss = require('xss-clean')
 const rateLimit = require('express-rate-limit')
+
+// Swagger
+const swagger = require('swagger-ui-express')
+const YAML = require('yamljs')
+// lading the swagger.yaml file
+const swaggerDocs = YAML.load('./swagger.yaml')
 
 const express = require('express');
 const app = express();
@@ -34,16 +40,19 @@ app.use(helmet());
 app.use(cors());
 app.use(xss());
 
+// Home Route
 app.get('/', (req, res) => {
-  return res.status(200).send(`<h1>Jobs API</h1>`)
-})
-
+  res.send('<h1>Jobs API</h1><a href="/api-documentation">Documentation</a>');
+});
+// swagger middleware
+app.use('/api-documentation', swagger.serve, swagger.setup(swaggerDocs))
 // routes
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/jobs', authenticateUser, jobsRouter)
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
+
 
 const port = process.env.PORT || 3000;
 
