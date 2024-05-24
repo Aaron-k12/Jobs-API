@@ -125,13 +125,27 @@ paths:
       deprecated: false
       security:
       - bearer: []
-  
+ 
     patch:
       tags:
       - Jobs
       summary: Update Job
       operationId: UpdateJob
       parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/CreateJobRequest'
+              - example:
+                  company: paypal
+                  position: engineer
+            example:
+              company: paypal
+              position: engineer
+        required: true
       responses:
         '200':
           description: ''
@@ -206,6 +220,7 @@ components:
       scheme: bearer
 security: []
 tags:
+
 - name: Auth
   description: ''
 - name: Jobs
